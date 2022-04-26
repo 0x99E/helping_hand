@@ -1,6 +1,9 @@
+import time
 import datetime
 import models
 from . import tools
+
+allowed_user_changes = ["name", "photo", "description", "mentor"]
 
 def create_tguser(parameters):
     first_name = parameters["first_name"]
@@ -89,4 +92,93 @@ def check_user(uuid=None, tgid=None):
         uuid = tguser.uuid
         check_user(uuid)
 
+def create_session(uuid):
+    check_user(uuid=uuid)
 
+    session_exists = True
+    while session_exists:
+        session_token = "s_" + tools.random_string(20)
+        session_exists = bool(models.Session.query.filter_by(session_token=session_token).first())
+    
+    configs = models.Config.query.first()
+    session_timeout = configs.session_timeout
+    new_expire = time.time() + session_timeout
+    new_expire = int(new_expire)
+
+    new_session = models.Session(uuid=uuid, session_token=session_token, expire=new_expire)
+    models.db.session.add(new_session)
+    models.db.session.commit()
+    return new_session
+    
+def not_expired_session(session_token):
+    result = False
+    session = models.Session.query.filter_by(session_token=session_token).first()
+    if session == None:
+        pass
+
+    if session.expire > time.time():
+        result = True
+    
+
+    return result
+
+def renew_session(session_token):
+    session = models.Session.query.filter_by(session_token=session_token).first()
+    if session == None:
+        return None
+    
+    session_valid = not_expired_session(session_token)
+    if not session_valid:
+        models.db.session.delete(session)
+        models.db.session.commit()
+        return None
+    
+    configs = models.Config.query.first()
+    session_timeout = configs.session_timeout
+    new_expire = time.time() + session_timeout
+    new_expire = int(new_expire)
+    session.expire = new_expire
+    models.db.session.commit()
+
+    return session
+
+def change_user(session_token=None, uuid=None, user_options=None):
+    user = None
+    if not uuid:
+        session = models.Session.query.filter_by(session_token=session_token).first()
+        if session == None:
+            return None
+        uuid = session.uuid
+    
+    user = models.User.query.filter_by(uuid=uuid).first()
+    if user == None:
+        return None
+    
+    
+    for key in user_options:
+        value = user_options[key]
+        if key in allowed_user_changes:
+            if key == "name":
+                user.name = value
+            elif key == "photo":
+                user.photo = value
+            elif key == "description":
+                user.description = value
+    
+    models.db.session.commit()
+
+    return user
+    
+def new_session(uuid):
+    check_user(uuid=uuid)
+    new_session = create_session(uuid)
+    return new_session
+
+def logout(session_token):
+    session = models.Session.query.filter_by(session_token=session_token).first()
+    if session == None:
+        return None
+    
+    models.db.session.delete(session)
+    models.db.session.commit()
+    return True

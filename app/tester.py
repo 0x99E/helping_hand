@@ -4,6 +4,7 @@ import string
 
 base_url = "http://127.0.0.1:5000/"
 secret = "testtokentoken"
+
 student_id = "u_test"
 
 def random_str(n=15):
@@ -53,15 +54,17 @@ def create_task():
     url = base_url + "task/create_task"
     name = input("Enter name: ")
     description = input("Enter description: ")
-    student = input("Enter student: ")
+    session_token = input("Enter session: ")
     mentor = input("Enter mentor: ")
     params = {
-        "name": name,
-        "description": description,
-        "student": student,
-        "mentor": mentor,
+        "session_token": session_token,
+        "task": {
+            "name": name,
+            "description": description,
+            "mentor": mentor,
+            }
     }
-    r = requests.get(url, params=params)
+    r = requests.post(url, json=params)
     print(r.text)
 
 def create_tasks():
@@ -82,6 +85,23 @@ def get_tasks():
     r = requests.get(url)
     print(r.text)
 
+def search_task():
+    url = base_url + "task/search_task"
+    params = {}
+    name = input("Enter name: ")
+    description = input("Enter description: ")
+    mentor = input("Enter mentor: ")
+    if name != "":
+        params["name"] = name
+    if description != "":
+        params["description"] = description
+    if mentor != "":
+        params["mentor"] = mentor
+
+    
+    r = requests.post(url, json=params)
+    print(r.text)
+
 def menu():
     print("1. Create user")
     print("2. Get users")
@@ -89,6 +109,7 @@ def menu():
     print("4. Create task")
     print("5. Create tasks")
     print("6. Get tasks")
+    print("7. Search task")
     print("0. Exit")
 
     option = input("Enter option: ")
@@ -109,6 +130,8 @@ def menu():
         create_tasks()
     elif option == 6:
         get_tasks()
+    elif option == 7:
+        search_task()
     
     elif option == 0:
         return 0

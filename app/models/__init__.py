@@ -9,6 +9,7 @@ from . import task
 from . import auth
 from . import session
 from . import service_auth
+from . import system_config
 
 User = user.User
 TGUser = tguser.TGUser
@@ -16,6 +17,9 @@ Task = task.Task
 Auth = auth.Auth
 Session = session.Session
 SERVICEAuth = service_auth.SERVICEAuth
+Config = system_config.System
+
+
 
 User
 __all__= [
@@ -25,5 +29,7 @@ __all__= [
    Auth,
    Session,
    SERVICEAuth,
+   Config,
+
    db,
 ]

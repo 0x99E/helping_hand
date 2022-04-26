@@ -35,20 +35,19 @@ class Handler():
         tguser = self.parse_user(message, no_photo=True)
         chat_id = message.chat.id
         reply = ""
-        if text == "/start":
-            name = tguser["first_name"]
-            token = "12345678910"
-            link = config.web_url + "auth/" + token
-            reply = message_template.default
-            reply = reply.format(name=name, link=link, token=token)
-            self.bot.send_message(chat_id, reply, parse_mode="HTML")
-        else:
-            name = tguser["first_name"]
-            token = "12345678910"
-            link = config.web_url + "auth/" + token
-            reply = message_template.default
-            reply = reply.format(name=name, link=link, token=token)
-            self.bot.send_message(chat_id, reply, parse_mode="HTML")
+
+        name = tguser["first_name"]
+        user = self.api.get_tguser(tgid=tguser["tgid"])
+        token = "no_token"
+        try:
+            token = self.api.get_token(user['uuid'])
+        except:
+            pass
+        
+        link = config.web_url + "auth/" + token
+        reply = message_template.default
+        reply = reply.format(name=name, link=link, token=token)
+        self.bot.send_message(chat_id, reply, parse_mode="HTML")
 
     def handle(self, message):
         self.user_hander(message)

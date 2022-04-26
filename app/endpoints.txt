@@ -1,0 +1,24 @@
+http://helping-hand.tech:333/
+
+# /user/
+
+#user_object
+{
+    "id": "",
+    "name": "",
+    "photo": "",
+    "mentor": "",
+    "description": "",
+    "uuid": "",
+}
+
+GET /user/get_user
+- uuid !Required
+
+return {
+    "ok": true,
+    "user": user_object,
+}
+
+GET /user/get_users
+- page 

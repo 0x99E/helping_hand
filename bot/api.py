@@ -16,7 +16,7 @@ class hh_api():
             "tgid": tgid,
             "service_token": self.service_token
         }
-        resp = r.get(full_url, params=parameters)
+        resp = r.get(full_url, json=parameters)
         response = resp.json()
         result = None
         if response["ok"]:
@@ -26,7 +26,21 @@ class hh_api():
         
         return result
 
-    
+    def get_token(self, uuid):
+        full_url = self.base_url + "telegram/get_token"
+        parameters = {
+            "uuid": uuid,
+            "service_token": self.service_token
+        }
+        
+        resp = r.post(full_url, json=parameters)
+        response = resp.json()
+        result = None
+        if response["ok"]:
+            result = response["token"]
+        else:
+            result = None
+        return result
 
     def get_user(self, uuid):
         full_url = self.base_url + "user/get_user"
@@ -49,7 +63,7 @@ class hh_api():
             "parameters": parameters,
             "service_token": self.service_token
         }
-        ready_parameters = json.dumps(parameters)
+        ready_parameters = parameters
 
         resp = r.post(full_url, json=ready_parameters)
         response = resp.json()

@@ -1,3 +1,4 @@
+from pydoc import describe
 from flask import Blueprint
 from flask import current_app
 from flask import request
@@ -6,6 +7,7 @@ from flask import jsonify
 import models
 
 from . import tools
+from . import task_handler
 
 blueprint = Blueprint('task', __name__, url_prefix='/task')
 
@@ -33,7 +35,7 @@ def get_tasks():
 
 @blueprint.route('/get_task', methods=['GET'])
 def get_task():
-    uuid = request.args.get('uuid', 0, type=str)
+    uuid = request.args.get('uuid', None, type=str)
     response = {"ok": False}
     try:
         task = models.Task.query.filter_by(uuid=uuid).first()
@@ -47,33 +49,57 @@ def get_task():
         response["error"] = str(e)
     return jsonify(response)
 
-@blueprint.route('/create_task', methods=['GET'])
+@blueprint.route('/search_task', methods=['POST'])
+def search_task():
+    parameters = None
+    if request.is_json:
+        parameters = request.json
+    
+    response = {"ok": False}
+    try:
+        rtasks = task_handler.search_task(parameters=parameters)
+        tasks = []
+
+        for task in rtasks:
+            tasks.append(task.to_dict())
+        response["ok"] = True
+        response["tasks"] = tasks
+            
+    except Exception as e:
+        response["error"] = str(e)
+    return jsonify(response)
+
+@blueprint.route('/create_task', methods=['POST'])
 def create_task():
-    name = request.args.get('name', "", type=str)
-    description = request.args.get('description', "", type=str)
-    student = request.args.get('student', "", type=str)
-    mentor = request.args.get('mentor', "", type=str)
+    parameters = None
+    
+    if request.is_json:
+        raw_parameters = request.json
+        parameters = raw_parameters
 
     response = {"ok": False}
     try:
-        user_exists = bool(models.User.query.filter_by(uuid=student).first())
-        if user_exists:
-            pass
-            if name == "":
-                raise Exception("Name is required!")
-            task_exist = True
-            while task_exist:
-                uuid = "task_" + tools.random_string(20)
-                task_exist = bool(models.Task.query.filter_by(uuid=uuid).first())
-            
-            temp_task = models.Task(name=name, description=description, student=student, mentor=mentor, uuid=uuid)
-            models.db.session.add(temp_task)
-            models.db.session.commit()
+        pass
+        new_task = task_handler.create_task(parameters)
+        if new_task:
             response["ok"] = True
-            response["task"] = temp_task.to_dict()
+            response["task"] = new_task.to_dict()
+            
+    except Exception as e:
+        response["error"] = str(e)
+    return jsonify(response)
 
-        else:
-            raise Exception("User uuid not exist!")
+@blueprint.route('/delete_task', methods=['POST'])
+def delete_task():
+    parameters = None
+    
+    if request.is_json:
+        raw_parameters = request.json
+        parameters = raw_parameters
+
+    response = {"ok": True}
+    try:
+        new_task = task_handler.delete_task(parameters)
             
     except Exception as e:
         response["error"] = str(e)

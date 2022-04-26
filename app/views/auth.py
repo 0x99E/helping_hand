@@ -6,80 +6,90 @@ from flask import jsonify
 import models
 
 from . import tools
+from . import user_handler
 
 blueprint = Blueprint('auth', __name__, url_prefix='/auth')
 
 # Get all users with pagination
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():
-    token = request.args.get('token', "", type=str)
     response = {"ok": False}
     try:
-        user_exists = models.Auth.query.filter_by(token=token).first()
-    except Exception as e:
-        response["error"] = str(e)
-    return jsonify(response)
+        token = request.values.get('token', "", type=str)
+        if request.is_json:
+            raw_parameters = request.json
+            token = raw_parameters['token']
 
-@blueprint.route('/get_task', methods=['GET'])
-def get_task():
-    uuid = request.args.get('uuid', 0, type=str)
-    response = {"ok": False}
-    try:
-        task = models.Task.query.filter_by(uuid=uuid).first()
-        if task == None:
-            task = []
-        else:
-            task = task.to_dict()
-        response["ok"] = True
-        response["task"] = task
-    except Exception as e:
-        response["error"] = str(e)
-    return jsonify(response)
+        auth = models.Auth.query.filter_by(token=token).first()
+        if auth:
+            new_session = user_handler.create_session(auth.uuid)
+            new_user = models.User.query.filter_by(uuid=auth.uuid).first()
 
-@blueprint.route('/create_task', methods=['GET'])
-def create_task():
-    name = request.args.get('name', "", type=str)
-    description = request.args.get('description', "", type=str)
-    student = request.args.get('student', "", type=str)
-    mentor = request.args.get('mentor', "", type=str)
-
-    response = {"ok": False}
-    try:
-        user_exists = bool(models.User.query.filter_by(uuid=student).first())
-        if user_exists:
-            pass
-            if name == "":
-                raise Exception("Name is required!")
-            task_exist = True
-            while task_exist:
-                uuid = "task_" + tools.random_string(20)
-                task_exist = bool(models.Task.query.filter_by(uuid=uuid).first())
-            
-            temp_task = models.Task(name=name, description=description, student=student, mentor=mentor, uuid=uuid)
-            models.db.session.add(temp_task)
-            models.db.session.commit()
             response["ok"] = True
-            response["task"] = temp_task.to_dict()
-
-        else:
-            raise Exception("User uuid not exist!")
+            response['result'] = {}
+            response["result"]["session"] = new_session.to_dict()
+            response["result"]["user"] = new_user.to_dict()
             
+        else:
+            response["error"] = "Invalid token"
     except Exception as e:
         response["error"] = str(e)
     return jsonify(response)
 
-@blueprint.route('/statistics', methods=['GET'])
-def statistics():
+@blueprint.route('/check_token', methods=['GET', 'POST'])
+def check_token():
+    token = request.values.get('token', "", type=str)
+
     response = {"ok": False}
     try:
-        total_open = models.Task.query.filter_by(closed=False).count()
-        total_closed = models.Task.query.filter_by(closed=True).count()
-        total_user = total_open + total_closed
-        response["ok"] = True
-        response["open"] = total_open
-        response["closed"] = total_closed
-        response["total"] = total_user
+        auth = models.Auth.query.filter_by(token=token).first()
+        if auth:
+            response["ok"] = True
+            response['result'] = True
+            
+        else:
+            response['result'] = False
+    except Exception as e:
+        response["error"] = str(e)
+    return jsonify(response)
+
+@blueprint.route('/check_session_token', methods=['GET', 'POST'])
+def check_session_token():
+    response = {"ok": False}
+    try: 
+        session_token = request.values.get('session_token', "", type=str)
+        if request.is_json:
+            raw_parameters = request.json
+            session_token = raw_parameters['session_token']
+        
+        new_session = user_handler.renew_session(session_token)
+        user = models.User.query.filter_by(uuid=new_session.uuid).first()
+        if new_session:
+            if user:
+                response["ok"] = True
+                response['result'] = {}
+                response['result']['user'] = user.to_dict()
+                response['result']['session'] = new_session.to_dict()
+        else:
+            response['error'] = "Session expired or invalid"
+    except Exception as e:
+        response["error"] = str(e)
+    return jsonify(response)
+
+@blueprint.route('/logout', methods=['POST'])
+def logout():
+    response = {"ok": False}
+    try: 
+        session_token = request.values.get('session_token', "", type=str)
+        if request.is_json:
+            raw_parameters = request.json
+            session_token = raw_parameters['session_token']
+        
+        response["ok"] = True   
+        user_handler.logout(session_token)
+
 
     except Exception as e:
         response["error"] = str(e)
     return jsonify(response)
+

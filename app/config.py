@@ -1,7 +1,7 @@
-from credintals import *
+from credentials import *
 
 DEBUG = False
-PORT = 8080
+PORT = 333
 HOST ='0.0.0.0'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
