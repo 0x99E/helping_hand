@@ -73,6 +73,29 @@ def get_mentors():
         response["error"] = str(e)
     return jsonify(response)
 
+# Get all mentors with pagination
+@blueprint.route('/get_topmentors', methods=['GET'])
+def get_topmentors():
+    response = {"ok": False}
+    try:
+        mentors_limit = 5
+        filter_by = {}
+        filter_by["mentor"] = True
+        raw_mentors = models.User.query.filter_by(**filter_by).order_by(models.User.rating.desc()).limit(mentors_limit).all()
+        
+        mentors = []
+        response["mentors"] = []
+
+        for mentors in raw_mentors:
+            ready_mentor = mentors.to_dict()
+            response["mentors"].append(ready_mentor)
+
+
+        response["ok"] = True
+
+    except Exception as e:
+        response["error"] = str(e)
+    return jsonify(response)
 
 @blueprint.route('/create_user', methods=['GET', 'POST'])
 def create_user():

@@ -10,9 +10,12 @@ class User(db.Model):
     mentor = db.Column(db.Boolean(), default=False)
     description = db.Column(db.Text(), default="")
     uuid = db.Column(db.String(100), unique=True, nullable=False)
+    stars = db.Column(db.Integer(), default=3)
+    rating = db.Column(db.Integer(), default=3)
+    
     
     def __repr__(self, ):
-        return "<User(id='%s', name='%s', photo='%s', mentor='%s', uuid='%s', description='%s', )>" % (self.id, self.name, self.photo, self.mentor, self.uuid, self.description)
+        return "<User(id='%s', name='%s', photo='%s', mentor='%s', uuid='%s', description='%s', start='%s', rating='%s',)>" % (self.id, self.name, self.photo, self.mentor, self.uuid, self.description, self.stars, self.rating)
     
     def to_dict(self, ):
         return {
@@ -22,4 +25,6 @@ class User(db.Model):
             "mentor": self.mentor,
             "uuid": self.uuid,
             "description": self.description,
+            "stars": self.stars,
+            "rating": self.rating,
         }

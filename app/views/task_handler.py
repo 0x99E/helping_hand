@@ -4,7 +4,7 @@ import models
 from . import tools
 from sqlalchemy import or_
 
-allowed_task_changes = ["name", "description", "mentor"]
+allowed_task_changes = ["name", "description", "answer", ]
 create_task_options = ["name", "description", "mentor", ]
 search_task_options = ["name", "description", "mentor", "student", ]
 
@@ -75,8 +75,14 @@ def create_task(parameters):
         raise e
 
 def search_task(parameters):
+    response = {}
+    per_page = 10
     tasks = None
     allowed_params = {}
+    page = 0
+    if 'page' in parameters:
+        page = parameters['page']
+    
     for key in parameters:
         if key in search_task_options:
             allowed_params[key] = parameters[key]
@@ -99,7 +105,100 @@ def search_task(parameters):
 
 
     try:
-        tasks = models.Task.query.filter(or_(*like_params), **strong_params).all()
-        return tasks
+        rtasks = models.Task.query.filter(or_(*like_params), **strong_params)
+        try:
+            rtasks = rtasks.paginate(page, per_page, False).items
+            total_number = len(rtasks)
+        except:
+            rtasks = []
+            total_number = 0
+        tasks = []
+        for task in rtasks:
+            task = task.to_dict()
+            tasks.append(task)
+        response['tasks'] = tasks
+        response['total_number'] = total_number
+        response["current_page"] = page
+        response["total_page"] = total_number // per_page + 1
+        
+        return response
+    except Exception as e:
+        raise e
+
+def close_task(parameters):
+    try:
+        session_token = parameters['session_token']
+        task_uuid = parameters['uuid']
+        session = models.Session.query.filter_by(session_token=session_token).first()
+        if session == None:
+            raise Exception("Invalid session token")
+        user_uuid = session.uuid
+
+
+        like_params = []
+        like_params.append(
+            models.Task.mentor == user_uuid,
+        )
+
+        
+
+        task_to_close = models.Task.query.filter(
+            ( (models.Task.mentor == user_uuid) | (models.Task.student == user_uuid) ),
+            models.Task.uuid == task_uuid,
+        ).first()
+        if task_to_close == None:
+            raise Exception("Task does not exist")
+
+        task_to_close.closed = True
+        models.db.session.commit()
+
+        return task_to_close
+    except Exception as e:
+        raise e
+
+def edit_task(parameters):
+    try:
+        session_token = parameters['session_token']
+        task_uuid = parameters['uuid']
+        task_params = parameters['task']
+        session = models.Session.query.filter_by(session_token=session_token).first()
+        if session == None:
+            raise Exception("Invalid session token")
+        user_uuid = session.uuid
+
+
+        
+
+        like_params = []
+        like_params.append(
+            models.Task.mentor == user_uuid,
+        )
+        like_params.append(
+            models.Task.student == user_uuid,
+        )
+
+        
+
+        task = models.Task.query.filter(
+            or_(*like_params),
+            models.Task.uuid == task_uuid,
+            models.Task.closed == False,
+        ).first()
+        if task == None:
+            raise Exception("Task does not exist or closed!")
+
+        for key in task_params:
+            value = task_params[key]
+            if key in allowed_task_changes:
+                if key == "name":
+                    task.name = value
+                elif key == "description":
+                    task.description = value
+                elif key == "answer":
+                    task.answer = value
+
+        models.db.session.commit()
+
+        return task
     except Exception as e:
         raise e

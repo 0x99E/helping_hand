@@ -8,7 +8,7 @@ import models
 
 from . import tools
 from . import task_handler
-
+ 
 blueprint = Blueprint('task', __name__, url_prefix='/task')
 
 # Get all users with pagination
@@ -49,21 +49,25 @@ def get_task():
         response["error"] = str(e)
     return jsonify(response)
 
-@blueprint.route('/search_task', methods=['POST'])
+@blueprint.route('/search_task', methods=['GET', 'POST'])
 def search_task():
+    per_page = 10
+
+    query = request.form
+    
     parameters = None
     if request.is_json:
         parameters = request.json
+        query = parameters
     
     response = {"ok": False}
     try:
-        rtasks = task_handler.search_task(parameters=parameters)
-        tasks = []
+        tasks = task_handler.search_task(parameters=query)
 
-        for task in rtasks:
-            tasks.append(task.to_dict())
+
+        for key in tasks:
+            response[key] = tasks[key]
         response["ok"] = True
-        response["tasks"] = tasks
             
     except Exception as e:
         response["error"] = str(e)
@@ -104,6 +108,44 @@ def delete_task():
     except Exception as e:
         response["error"] = str(e)
     return jsonify(response)
+
+@blueprint.route('/close_task', methods=['POST'])
+def close_task():
+    parameters = None
+    
+    if request.is_json:
+        raw_parameters = request.json
+        parameters = raw_parameters
+
+    response = {"ok": False}
+    try:
+        task = task_handler.close_task(parameters)
+        if task:
+            response["task"] = task.to_dict()
+
+    except Exception as e:
+        response["error"] = str(e)
+    return jsonify(response)
+
+@blueprint.route('/edit_task', methods=['POST'])
+def edit_task():
+    parameters = None
+    
+    if request.is_json:
+        raw_parameters = request.json
+        parameters = raw_parameters
+
+    response = {"ok": False}
+    try:
+        task = task_handler.edit_task(parameters)
+        if task:
+            response["task"] = task.to_dict()
+            response = {"ok": True}
+
+    except Exception as e:
+        response["error"] = str(e)
+    return jsonify(response)
+
 
 @blueprint.route('/statistics', methods=['GET'])
 def statistics():
