@@ -4,6 +4,10 @@ import models
 from . import tools
 
 allowed_user_changes = ["name", "photo", "description", "mentor"]
+allowed_tguser_changes = [
+    "photo", "photo_hash", 
+"known_photo", "known_photo_hash", 
+]
 
 def create_tguser(parameters):
     first_name = parameters["first_name"]
@@ -161,14 +165,42 @@ def change_user(session_token=None, uuid=None, user_options=None):
             if key == "name":
                 user.name = value
             elif key == "photo":
-                user.photo = value
+                if user.ignore_avatar:
+                    pass
+                else:
+                    user.photo = value
             elif key == "description":
                 user.description = value
     
     models.db.session.commit()
 
     return user
+
+def change_tguser(tgid=None, user_options=None):
+
+    user = models.TGUser.query.filter_by(tgid=tgid).first()
+    if user == None:
+        return None
     
+
+    for key in user_options:
+        value = user_options[key]
+        if key in allowed_tguser_changes:
+            if key == "photo":
+                user.photo = value
+            elif key == "photo_hash":
+                user.photo_hash = value
+            elif key == "known_photo":
+                user.known_photo = value
+            elif key == "known_photo_hash":
+                user.known_photo_hash = value
+
+    
+    models.db.session.commit()
+
+    return user
+
+
 def new_session(uuid):
     check_user(uuid=uuid)
     new_session = create_session(uuid)

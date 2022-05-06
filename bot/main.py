@@ -6,8 +6,10 @@ import api
 import config
 
 bot = telebot.TeleBot(config.token,)
-api = api.hh_api(config.base_url, config.service_token)
-handler = handler.Handler(bot, api)
+hh_api = api.hh_api(base_url = config.hh_url, service_token = config.hh_token)
+imgbb_api = api.imgbb_api(config.imgbb_token)
+
+handler = handler.Handler(bot, hh_api, imgbb_api)
 
 @bot.message_handler()
 def handle(message):

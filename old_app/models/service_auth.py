@@ -10,7 +10,7 @@ class SERVICEAuth(db.Model):
 
     
     def __repr__(self, ):
-        return f"<SERVICEAuth({self.to_dict()})>"
+        return "<SERVICEAuth(id='%s', uuid='%s', token='%s', expire='%s')>" % (self.id, self.uuid, self.token, self.expire)
 
     def to_dict(self, ):
         return {

@@ -16,10 +16,19 @@ class Task(db.Model):
     date = db.Column(db.String(), default="")
     idate = db.Column(db.Integer(), default=0)
 
-
     def __repr__(self, ):
-        return f"<Task({self.to_dict()})>"
-
+        return "<Task(id='%s', name='%s', description='%s', answer='%s', closed='%s', student='%s', mentor='%s', uuid='%s', date='%s', idate='%s',)>" % (
+            self.id, 
+            self.name, 
+            self.description, 
+            self.answer, 
+            self.closed, 
+            self.student,
+            self.mentor, 
+            self.uuid,
+            self.date,
+            self.idate,
+            )
     
     def to_dict(self, ):
         return {

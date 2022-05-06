@@ -8,7 +8,7 @@ class Auth(db.Model):
     token = db.Column(db.Text(), )
     
     def __repr__(self, ):
-        return "<Auth(id='%s', uuid='%s', token='%s')>" % (self.id, self.uuid, self.token)
+        return f"<Auth({self.to_dict()})>"
     
     def to_dict(self, ):
         return {

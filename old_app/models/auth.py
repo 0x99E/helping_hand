@@ -1,20 +1,18 @@
-from pydoc import describe
 from . import base
 db = base.db
 
-class SERVICEAuth(db.Model):
-    __tablename__ = "service_auth"
+class Auth(db.Model):
+    __tablename__ = "auth"
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
-    name = db.Column(db.Text(), )
+    uuid = db.Column(db.Text(), )
     token = db.Column(db.Text(), )
-
     
     def __repr__(self, ):
-        return f"<SERVICEAuth({self.to_dict()})>"
-
+        return "<Auth(id='%s', uuid='%s', token='%s')>" % (self.id, self.uuid, self.token)
+    
     def to_dict(self, ):
         return {
             "id": self.id,
-            "name": self.name,
+            "uuid": self.uuid,
             "token": self.token,
-            }
+        }

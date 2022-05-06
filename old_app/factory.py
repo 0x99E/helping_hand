@@ -8,15 +8,14 @@ import models
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_pyfile("config.py")
-
     CORS(app)
-
+    app.config.from_pyfile("config.py")
     global_db = models.db
     global_db.init_app(app)
     global_db.create_all(app=app)
     app.config['database'] = global_db
 
+    
 
     with app.app_context():
         dbsettings_exists = bool(models.Config.query.first())

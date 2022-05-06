@@ -1,0 +1,586 @@
+{
+	"info": {
+		"_postman_id": "db7918c1-f41b-4857-83ba-7f678667a3ed",
+		"name": "Helping_Hand API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/user/",
+			"item": [
+				{
+					"name": "/user/get_user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "helping-hand.tech:333/user/get_user",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"user",
+								"get_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user/get_users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "helping-hand.tech:333/user/get_users?page=0",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"user",
+								"get_users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user/get_mentors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "helping-hand.tech:333/user/get_mentors?page=0",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"user",
+								"get_mentors"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user/get_topmentors",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "helping-hand.tech:333/user/get_topmentors",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"user",
+								"get_topmentors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user/statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "helping-hand.tech:333/user/statistics",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"user",
+								"statistics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user/user_exists",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"uuid\": \"CHANGEME\"\n\t\n}"
+						},
+						"url": {
+							"raw": "helping-hand.tech:333/user/user_exists",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"user",
+								"user_exists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user/change_user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"session_token\": \"CHANGEME\",\n\t\n\t\"user\":\t{\n\t    \"name\": \"TestChangeName\",\n\t    \"description\": \"TestChangeDescription\",\n\t    \"photo\": \"https://cdn.allfamous.org/people/avatars/eva-elfie-e1v7-1630813298664-allfamous.org.jpg\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "http://helping-hand.tech:333/user/change_user",
+							"protocol": "http",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"user",
+								"change_user"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "/auth/",
+			"item": [
+				{
+					"name": "/auth/login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"token\": \"CHANGEME\"\n}"
+						},
+						"url": {
+							"raw": "http://helping-hand.tech:333/auth/login",
+							"protocol": "http",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/auth/check_session_token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"session_token\": \"CHANGEME\"\n}"
+						},
+						"url": {
+							"raw": "http://helping-hand.tech:333/auth/check_session_token",
+							"protocol": "http",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"auth",
+								"check_session_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/auth/logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"session_token\": \"CHANGEME\"\n}"
+						},
+						"url": {
+							"raw": "http://helping-hand.tech:333/auth/logout",
+							"protocol": "http",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "/task/",
+			"item": [
+				{
+					"name": "/task/get_task",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "helping-hand.tech:333/task/search_task?uuid=0",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"task",
+								"search_task"
+							],
+							"query": [
+								{
+									"key": "uuid",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/task/get_tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "helping-hand.tech:333/task/get_tasks?page=0&query=CHANGEME",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"task",
+								"get_tasks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "query",
+									"value": "CHANGEME"
+								},
+								{
+									"key": "sort",
+									"value": "closed",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/task/get_last",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "helping-hand.tech:333/task/get_last?sort=open&uuid=u_mixxx&user_role=student",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"task",
+								"get_last"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "open"
+								},
+								{
+									"key": "uuid",
+									"value": "u_mixxx"
+								},
+								{
+									"key": "user_role",
+									"value": "student"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/task/statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "helping-hand.tech:333/task/statistics",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"task",
+								"statistics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/task/create_task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"session_token\": \"CHANGEME\",\n\t\n\t\"task\": {\n\t\t\"name\" : \"test\",\n\t\t\"description\" : \"test\",\n\t\t\"mentor\" : \"u_admin\"\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "helping-hand.tech:333/task/create_task",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"task",
+								"create_task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/task/close_task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"session_token\": \"s_IwcT74zfPJobY5AheAdt\",\n\t\"uuid\": \"t_vRlONhfrA05wfjzqPOuo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "helping-hand.tech:333/task/close_task",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"task",
+								"close_task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/task/delete_task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"session_token\": \"CHANGEME\",\n\t\n\t\"uuid\": \"TASKUUID\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "helping-hand.tech:333/task/delete_task",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"task",
+								"delete_task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/task/change_task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"session_token\": \"CHANGEME\",\n\t\"uuid\": \"CHANGEME\",\n\t\n\t\"task\":\t{\n\t    \"name\": \"TestChangeName\",\n\t    \"description\": \"TestChangeDescription\",\n\t    \"answer\": \"TestChangeAnswer\"\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "helping-hand.tech:333/task/edit_task",
+							"host": [
+								"helping-hand",
+								"tech"
+							],
+							"port": "333",
+							"path": [
+								"task",
+								"edit_task"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -19,8 +19,7 @@ class TGUser(db.Model):
     uuid = db.Column(db.String(100), unique=True)
 
     def __repr__(self, ):
-        return f"<TGUser({self.to_dict()})>"
-
+        return "<TGUser(id='%s', first_name='%s', last_name='%s', username='%s', photo='%s', photo_hash='%s', known_photo='%s', known_photo_hash='%s', created_at='%s', uuid='%s')>" % (self.id, self.first_name, self.last_name, self.username, self.photo, self.photo_hash, self.known_photo, self.known_photo_hash, self.created_at, self.uuid)
 
     def to_dict(self, ):
         return {

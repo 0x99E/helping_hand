@@ -9,9 +9,8 @@ class Session(db.Model):
     expire = db.Column(db.Integer(), )
     
     def __repr__(self, ):
-        return f"<Session({self.to_dict()})>"
-
-
+        return "<Session(id='%s', uuid='%s', session_token='%s', expire='%s',)>" % (self.id, self.uuid, self.session_token, self.expire,)
+    
     def to_dict(self, ):
         return {
             "id": self.id,

@@ -16,8 +16,8 @@ class User(db.Model):
     
     
     def __repr__(self, ):
-        return f"<User({self.to_dict()})>"
-
+        return "<User(id='%s', name='%s', photo='%s', mentor='%s', uuid='%s', description='%s', start='%s', rating='%s', ignore_avatar='%s',)>" % (self.id, self.name, self.photo, self.mentor, self.uuid, self.description, self.stars, self.rating, self.ignore_avatar,)
+    
     def to_dict(self, ):
         return {
             "id": self.id,
